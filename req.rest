@@ -1,0 +1,18 @@
+POST http://localhost:8082/auth/signup
+Content-Type: application/json
+
+{
+  "fullName": "Diego Armando Maradona",
+  "username": "eldiego",
+  "email": "eldiego@afc.ar",
+  "password": "drugs@1986"
+}
+
+###
+POST http://localhost:8082/auth/login
+Content-Type: application/json
+
+{
+  "username": "eldiego",
+  "password": "drugs@1987"
+}
