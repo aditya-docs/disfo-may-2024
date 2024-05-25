@@ -20,11 +20,17 @@ const postSignup = async (req, res) => {
 
 const postLogin = async (req, res) => {
   try {
-    const response = await AuthServiceInstance.login(req.body);
-    if (response === "success")
-      return res.status(200).send({ message: "Login successful" });
+    const response = await AuthServiceInstance.login(
+      req.body.password,
+      req.user
+    );
+    if (response.isLoggedIn)
+      return res
+        .status(200)
+        .send({ message: "Login successful", token: response.token });
     res.status(401).send({ message: "password is incorrect" });
   } catch (error) {
+    console.log(error);
     if (error.message.includes("not found"))
       return res.status(404).send({ message: "Username could not be found" });
     res

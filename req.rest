@@ -1,3 +1,6 @@
+GET http://localhost:8082/user/all
+x-api-key: Abracadabra
+###
 POST http://localhost:8082/auth/signup
 Content-Type: application/json
 
@@ -14,5 +17,5 @@ Content-Type: application/json
 
 {
   "username": "eldiego",
-  "password": "drugs@1987"
+  "password": "drugs@1986"
 }

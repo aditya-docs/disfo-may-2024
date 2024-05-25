@@ -1,8 +1,7 @@
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const User = require("../models/user.model");
-const UserService = require("./user.service");
-const UserServiceInstance = new UserService();
 
 class AuthService {
   //   signup = async (body) => User.create(body);
@@ -22,13 +21,23 @@ class AuthService {
   verifyPassword = async (password, hashedPassword) =>
     bcrypt.compare(password, hashedPassword);
 
-  login = async (body) => {
-    const { username, password } = body;
-    const response = await UserServiceInstance.findByUsername(username);
-    if (response === null) throw Error("User not found");
-    if (await this.verifyPassword(password, response.password))
-      return "success";
-    return "failure";
+  login = async (password, reqUser) => {
+    if (await this.verifyPassword(password, reqUser.password)) {
+      return {
+        isLoggedIn: true,
+        token: await this.generateToken({ userId: reqUser._id }),
+      };
+    }
+    return {
+      isLoggedIn: false,
+    };
+  };
+
+  generateToken = async (payload) => {
+    const token = await jwt.sign(payload, process.env.JWT_SECRET_KEY, {
+      expiresIn: "1m",
+    });
+    return token;
   };
 }
 
