@@ -1,0 +1,22 @@
+const JWTStrategy = require("passport-jwt").Strategy;
+const ExtractJWT = require("passport-jwt").ExtractJwt;
+const UserService = require("../services/user.service.js");
+const UserServiceInstance = new UserService();
+
+const options = {
+  jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+  secretOrKey: process.env.JWT_SECRET_KEY,
+};
+
+const strategy = new JWTStrategy(options, async (payload, done) => {
+  try {
+    const user = await UserServiceInstance.findById(payload.userId);
+    return done(null, user);
+  } catch (error) {
+    return done(error, false);
+  }
+});
+
+module.exports = (passport) => {
+  passport.use(strategy);
+};

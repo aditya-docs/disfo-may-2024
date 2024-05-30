@@ -48,7 +48,10 @@ const getAllDiscussions = async (req, res) => {
 
 const createNewDiscussion = async (req, res) => {
   try {
-    const result = await DiscussionServiceInstance.create(req.body);
+    const result = await DiscussionServiceInstance.create({
+      ...req.body,
+      author: req.user.username,
+    });
     res.json(result);
   } catch (error) {
     res.status(500).json({

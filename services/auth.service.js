@@ -25,7 +25,19 @@ class AuthService {
     if (await this.verifyPassword(password, reqUser.password)) {
       return {
         isLoggedIn: true,
-        token: await this.generateToken({ userId: reqUser._id }),
+        token: await this.generateToken({
+          userId: reqUser._id,
+          permissions: [
+            {
+              endpoint: "/profile",
+              methods: ["get"],
+            },
+            {
+              endpoint: "/profile/settings",
+              methods: ["post", "get"],
+            },
+          ],
+        }),
       };
     }
     return {
@@ -39,6 +51,8 @@ class AuthService {
     });
     return token;
   };
+
+  verifyToken = async (token) => jwt.verify(token, process.env.JWT_SECRET_KEY);
 }
 
 module.exports = AuthService;

@@ -1,4 +1,7 @@
 const router = require("express").Router();
+// const passport = require("passport");
+// const authenticate = passport.authenticate("jwt", { session: false });
+const verifyJwtAndAppendUserToReq = require("../middlewares/auth.middleware");
 const {
   findDiscussionById,
   findDiscussionsByUser,
@@ -8,13 +11,14 @@ const {
   deleteDiscussion,
   updateDiscussion,
 } = require("../controllers/discussion.controller");
+
 const {
   discussionValidationSchema,
   commentValidationSchema,
 } = require("../validations/discussion.validator");
 const { validateSchema } = require("../middlewares/validate.middleware");
 const { checkAdminKey } = require("../middlewares/admin.middleware");
-const { fetchUserInCollection } = require("../middlewares/user.middleware");
+const { fetchUsernameInCollection } = require("../middlewares/user.middleware");
 const {
   fetchDiscussion,
   verifyAuthor,
@@ -25,7 +29,8 @@ const validateComment = validateSchema(commentValidationSchema);
 
 router.post(
   "/new",
-  fetchUserInCollection,
+  verifyJwtAndAppendUserToReq,
+  fetchUsernameInCollection,
   validateDiscussion,
   createNewDiscussion
 );
@@ -38,7 +43,7 @@ router.delete("/id/:id", verifyAuthor, deleteDiscussion);
 
 router.put(
   "/:id/comment",
-  fetchUserInCollection,
+  fetchUsernameInCollection,
   fetchDiscussion,
   validateComment,
   addNewComment

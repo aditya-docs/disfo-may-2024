@@ -32,4 +32,7 @@ const fetchUsernameInCollection = async (req, res, next) => {
   }
 };
 
-module.exports = { fetchUserInCollection, fetchUsernameInCollection };
+module.exports = {
+  fetchUserInCollection,
+  fetchUsernameInCollection,
+};
